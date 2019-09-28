@@ -9,8 +9,19 @@ namespace AnalisadorLexico
     {
         static void Main(string[] args)
         {
+            string filePath = string.Empty;
+            if (args.Any())
+            {
+                filePath = args[0];
+            }
+            else
+            {
+                Console.WriteLine("Input file path:");
+                filePath = Console.ReadLine();
+            }
+            
             Lexical lexico = new Lexical();
-            List<Token> tokenList = lexico.Analize(@"C:\MeusProjetos\Outros\LexicalAnalyzer\miniJavaFactorial.mjar", typeof(TokenTypeMiniJava));
+            List<Token> tokenList = lexico.Analize(filePath, typeof(TokenTypeMiniJava));
 
             Console.WriteLine("Número de tokens: " + tokenList.Count);
             foreach (var token in tokenList.OrderBy(t => t.Linha))
