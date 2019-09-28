@@ -10,7 +10,7 @@ namespace AnalisadorLexico
         static void Main(string[] args)
         {
             Lexical lexico = new Lexical();
-            List<Token> tokenList = lexico.Analize(@"C:\MeusProjetos\Outros\LexicalAnalyzer\teste1.ldp", typeof(TokenTypeLdp));
+            List<Token> tokenList = lexico.Analize(@"C:\MeusProjetos\Outros\LexicalAnalyzer\miniJavaFactorial.mjar", typeof(TokenTypeMiniJava));
 
             Console.WriteLine("Número de tokens: " + tokenList.Count);
             foreach (var token in tokenList.OrderBy(t => t.Linha))

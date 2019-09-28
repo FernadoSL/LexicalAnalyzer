@@ -89,6 +89,12 @@ namespace AnalisadorLexico.TiposToken
         SNEW,
 
         [Description("!")]
-        SEXCLAMACAO
+        SEXCLAMACAO,
+
+        [Description("String")]
+        SSTRING,
+
+        [Description("return")]
+        SRETURN
     }
 }

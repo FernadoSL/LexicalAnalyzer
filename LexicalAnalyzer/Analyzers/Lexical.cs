@@ -71,12 +71,6 @@ namespace AnalisadorLexico
             result.Add(foundedToken);
         }
 
-        private void AddToken(List<Token> result, int lineNumber, string word, TokenTypeLdp tipoToken)
-        {
-            var foundedToken = new Token() { Lexema = word, Linha = lineNumber, Tipo = tipoToken };
-            result.Add(foundedToken);
-        }
-
         public List<Token> AnalizeV2(string filePath, Type tokenType)
         {
             int tokenMaxSize = 8;
@@ -163,10 +157,10 @@ namespace AnalisadorLexico
             return value.ToString();
         }
 
-        private TokenTypeLdp GetTokenType(string word)
+        private TokenTypeMiniJava GetTokenType(string word)
         {
-            var tokenList = Enum.GetValues(typeof(TokenTypeLdp))
-                            .Cast<TokenTypeLdp>()
+            var tokenList = Enum.GetValues(typeof(TokenTypeMiniJava))
+                            .Cast<TokenTypeMiniJava>()
                             .ToList();
 
             foreach (var tipoToken in tokenList)
@@ -175,7 +169,7 @@ namespace AnalisadorLexico
                     return tipoToken;
             }
 
-            return TokenTypeLdp.SABRE_PARENTESIS;
+            return TokenTypeMiniJava.SABRE_PARENTESES;
         }
     }
 }
