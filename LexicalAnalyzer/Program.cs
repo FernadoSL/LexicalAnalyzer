@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AnalisadorLexico.TiposToken;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,7 +10,7 @@ namespace AnalisadorLexico
         static void Main(string[] args)
         {
             Lexical lexico = new Lexical();
-            List<Token> tokenList = lexico.Analize(args[0]);
+            List<Token> tokenList = lexico.Analize(@"C:\MeusProjetos\Outros\LexicalAnalyzer\teste1.ldp", typeof(TokenTypeLdp));
 
             Console.WriteLine("Número de tokens: " + tokenList.Count);
             foreach (var token in tokenList.OrderBy(t => t.Linha))

@@ -4,12 +4,13 @@ using System.IO;
 using System.Linq;
 using System.ComponentModel;
 using System.Reflection;
+using AnalisadorLexico.TiposToken;
 
 namespace AnalisadorLexico
 {
     public class Lexical
     {
-        public List<Token> Analize(string filePath)
+        public List<Token> Analize(string filePath, Type tokenType)
         {
             List<Token> result = new List<Token>();
 
@@ -19,8 +20,8 @@ namespace AnalisadorLexico
                 string line = "";
                 int lineNumber = 1;
 
-                var tokens = GetAllTokens();
-                var tokenTypesOneChar = GetTokensOfSize(1);
+                var tokens = GetAllTokens(tokenType);
+                var tokenTypesOneChar = GetTokensOfSize(1, tokenType);
 
                 while ((line = stream.ReadLine()) != null)
                 {
@@ -76,7 +77,7 @@ namespace AnalisadorLexico
             result.Add(foundedToken);
         }
 
-        public List<Token> AnalizeV2(string filePath)
+        public List<Token> AnalizeV2(string filePath, Type tokenType)
         {
             int tokenMaxSize = 8;
             List<Token> result = new List<Token>();
@@ -84,7 +85,7 @@ namespace AnalisadorLexico
             {
                 int lineNumber = 1;
                 string line = string.Empty;
-                List<string> allTokensOfSize = GetTokensOfSize(tokenSize);
+                List<string> allTokensOfSize = GetTokensOfSize(tokenSize, tokenType);
 
                 FileStream file = new FileStream(filePath, FileMode.Open);
                 using (var stream = new StreamReader(file))
@@ -119,21 +120,32 @@ namespace AnalisadorLexico
             return result;
         }
 
-        private List<string> GetTokensOfSize(int size)
+        private List<string> GetTokensOfSize(int size, Type typeToken)
         {
-            List<string> tokens = this.GetAllTokens();
+            List<string> tokens = this.GetAllTokens(typeToken);
             var allTokensOfI = tokens.Where(t => t.Count() == size).ToList();
 
             return allTokensOfI;
         }
 
-        private List<string> GetAllTokens()
+        private List<string> GetAllTokens(Type typeToken)
         {
             List<string> tokens = new List<string>();
-            Enum.GetValues(typeof(TokenTypeLdp))
-                .Cast<TokenTypeLdp>()
-                .ToList()
-                .ForEach(tt => tokens.Add(GetTokenString((TokenTypeLdp)tt)));
+
+            if (typeof(TokenTypeMiniJava) == typeToken)
+            {
+                Enum.GetValues(typeToken)
+                    .Cast<TokenTypeMiniJava>()
+                    .ToList()
+                    .ForEach(tt => tokens.Add(GetTokenString(tt)));
+            }
+            else if (typeof(TokenTypeLdp) == typeToken)
+            {
+                Enum.GetValues(typeToken)
+                    .Cast<TokenTypeLdp>()
+                    .ToList()
+                    .ForEach(tt => tokens.Add(GetTokenString(tt)));
+            }
 
             return tokens;
         }
