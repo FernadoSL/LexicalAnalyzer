@@ -25,6 +25,15 @@ namespace AnalisadorLexico
 
                 while ((line = stream.ReadLine()) != null)
                 {
+                    var splitedLine = line.Split(" ");
+                    foreach (var token in this.GetAllTokens(tokenType))
+                    {
+                        while (splitedLine.Any(s => s.Contains(token)))
+                        {
+
+                        }
+                    }
+
                     char[] lineCharArray = line.ToArray();
                     string word = string.Empty;
                     for (int i = 0; i < lineCharArray.Length; i++)

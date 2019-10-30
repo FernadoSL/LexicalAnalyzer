@@ -1,4 +1,5 @@
 ﻿using AnalisadorLexico.TiposToken;
+using LexicalAnalyzer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace AnalisadorLexico
             }
             
             Lexical lexico = new Lexical();
-            List<Token> tokenList = lexico.Analize(filePath, typeof(TokenTypeMiniJava));
+            List<Token> tokenList = lexico.Analize(filePath, typeof(TokenTypeLdp));
 
             Console.WriteLine("Número de tokens: " + tokenList.Count);
             foreach (var token in tokenList.OrderBy(t => t.Linha))
