@@ -25,14 +25,7 @@ namespace AnalisadorLexico
 
                 while ((line = stream.ReadLine()) != null)
                 {
-                    var splitedLine = line.Split(" ");
-                    foreach (var token in this.GetAllTokens(tokenType))
-                    {
-                        while (splitedLine.Any(s => s.Contains(token)))
-                        {
-
-                        }
-                    }
+                    this.GetIdentifiersAndConstants(line, tokens, result, lineNumber);
 
                     char[] lineCharArray = line.ToArray();
                     string word = string.Empty;
@@ -74,9 +67,35 @@ namespace AnalisadorLexico
             }
         }
 
+        private void GetIdentifiersAndConstants(string line, List<string> tokens, List<Token> result, int lineNumber)
+        {
+            var splitedLine = line.Split(" ").ToList();
+            var orderedTokens = tokens.OrderByDescending(t => t.Length);
+            foreach (var token in orderedTokens)
+            {
+                splitedLine = string.Join(" ", splitedLine).Split(token).ToList();
+            }
+            splitedLine = string.Join("", splitedLine).Split(" ").ToList();
+            splitedLine = splitedLine.Where(s => !string.IsNullOrEmpty(s)).Distinct().ToList();
+
+            foreach (var token in splitedLine)
+            {
+                bool isNumeric = int.TryParse(token, out int x);
+                if (isNumeric)
+                    AddToken(result, lineNumber, token, TokenTypeMiniJava.SCONSTANT);
+                else
+                    AddToken(result, lineNumber, token, TokenTypeMiniJava.SIDENTIFIER);
+            }
+        }
+
         private void AddToken(List<Token> result, int lineNumber, string word)
-        {   
-            var foundedToken = new Token() { Lexema = word, Linha = lineNumber, Tipo = this.GetTokenType(word) };   
+        {
+            this.AddToken(result, lineNumber, word, this.GetTokenType(word));
+        }
+
+        private void AddToken(List<Token> result, int lineNumber, string word, TokenTypeMiniJava tokenType)
+        {
+            var foundedToken = new Token() { Lexema = word, Linha = lineNumber, Tipo = tokenType };
             result.Add(foundedToken);
         }
 

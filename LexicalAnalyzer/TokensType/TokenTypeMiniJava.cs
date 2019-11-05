@@ -95,6 +95,10 @@ namespace AnalisadorLexico.TiposToken
         SSTRING,
 
         [Description("return")]
-        SRETURN
+        SRETURN,
+
+        SIDENTIFIER,
+
+        SCONSTANT
     }
 }

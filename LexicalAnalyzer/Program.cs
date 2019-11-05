@@ -20,14 +20,30 @@ namespace AnalisadorLexico
                 Console.WriteLine("Input file path:");
                 filePath = Console.ReadLine();
             }
-            
-            Lexical lexico = new Lexical();
-            List<Token> tokenList = lexico.Analize(filePath, typeof(TokenTypeLdp));
 
+            RecursivePredictiveParser parser = new RecursivePredictiveParser();
+
+            // Get Tokens
+            List<Token> tokenList = parser.LexicalAnalyzer.Analize(filePath, typeof(TokenTypeMiniJava));
+            
+            // Populate Symbol Table
+            foreach (var token in tokenList.Where(t => 
+                t.Tipo == TokenTypeMiniJava.SIDENTIFIER || t.Tipo == TokenTypeMiniJava.SCONSTANT))
+            {
+                parser.SymbolTable.TokenTable.TryAdd(token.Lexema, token);
+            }
+
+            // Print Results
             Console.WriteLine("Número de tokens: " + tokenList.Count);
             foreach (var token in tokenList.OrderBy(t => t.Linha))
             {
                 Console.WriteLine($"Lexema: {token.Lexema} \nLinha: {token.Linha} \nTipoToken: {token.Tipo} \n---");
+            }
+
+            Console.WriteLine("Tabela de Símbolos: ");
+            foreach (var simbolo in parser.SymbolTable.TokenTable)
+            {
+                Console.WriteLine(simbolo.Key + " " + simbolo.Value.Linha);
             }
         }
     }

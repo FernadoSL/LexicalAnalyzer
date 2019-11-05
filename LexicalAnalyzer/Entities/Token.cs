@@ -1,7 +1,4 @@
 ﻿using AnalisadorLexico.TiposToken;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AnalisadorLexico
 {
