@@ -11,5 +11,11 @@ namespace AnalisadorLexico
         public int Linha { get; set; }
 
         public int Coluna { get; set; }
+
+        public int Id { get; set; }
+
+        public string Scope { get; set; }
+
+        public string DataType { get; set; }
     }
 }

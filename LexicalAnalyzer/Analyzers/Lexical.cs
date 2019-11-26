@@ -10,6 +10,15 @@ namespace AnalisadorLexico
 {
     public class Lexical
     {
+        public int IdentifiersCounter { get; set; }
+        
+        public string CurrentScope { get; set; }
+
+        public Lexical()
+        {
+            this.IdentifiersCounter = 1;
+        }
+
         public List<Token> Analize(string filePath, Type tokenType)
         {
             List<Token> result = new List<Token>();
@@ -27,6 +36,8 @@ namespace AnalisadorLexico
                 {
                     this.GetIdentifiersAndConstants(line, tokens, result, lineNumber);
 
+                    // C:\Users\alu2015110289\Documents\LexicalAnalyzer\miniJavaFactorial.mjar
+                    
                     char[] lineCharArray = line.ToArray();
                     string word = string.Empty;
                     for (int i = 0; i < lineCharArray.Length; i++)
@@ -77,14 +88,26 @@ namespace AnalisadorLexico
             }
             splitedLine = string.Join("", splitedLine).Split(" ").ToList();
             splitedLine = splitedLine.Where(s => !string.IsNullOrEmpty(s)).Distinct().ToList();
-
+            
             foreach (var token in splitedLine)
             {
+                if (line.Contains(this.GetTokenString(TokenTypeMiniJava.SCLASS)))
+                {
+                    this.CurrentScope = splitedLine.FirstOrDefault();
+                }
+
+                if (line.Contains(this.GetTokenString(TokenTypeMiniJava.SINT)))
+                {
+
+                }
+
                 bool isNumeric = int.TryParse(token, out int x);
                 if (isNumeric)
                     AddToken(result, lineNumber, token, TokenTypeMiniJava.SCONSTANT);
                 else
-                    AddToken(result, lineNumber, token, TokenTypeMiniJava.SIDENTIFIER);
+                    AddToken(result, lineNumber, token, TokenTypeMiniJava.SIDENTIFIER, this.IdentifiersCounter);
+
+                this.IdentifiersCounter++;
             }
         }
 
@@ -93,9 +116,9 @@ namespace AnalisadorLexico
             this.AddToken(result, lineNumber, word, this.GetTokenType(word));
         }
 
-        private void AddToken(List<Token> result, int lineNumber, string word, TokenTypeMiniJava tokenType)
+        private void AddToken(List<Token> result, int lineNumber, string word, TokenTypeMiniJava tokenType, int identifierCounter = 0)
         {
-            var foundedToken = new Token() { Lexema = word, Linha = lineNumber, Tipo = tokenType };
+            var foundedToken = new Token() { Lexema = word, Linha = lineNumber, Tipo = tokenType, Id = identifierCounter, Scope = this.CurrentScope };
             result.Add(foundedToken);
         }
 

@@ -43,8 +43,10 @@ namespace AnalisadorLexico
             Console.WriteLine("Tabela de Símbolos: ");
             foreach (var simbolo in parser.SymbolTable.TokenTable)
             {
-                Console.WriteLine(simbolo.Key + " " + simbolo.Value.Linha);
+                Console.WriteLine(simbolo.Key + " " + simbolo.Value.Scope);
             }
+
+            Console.ReadKey();
         }
     }
 }
