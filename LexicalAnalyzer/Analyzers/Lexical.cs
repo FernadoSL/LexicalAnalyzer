@@ -21,7 +21,7 @@ namespace AnalisadorLexico
 
         public List<Token> Analize(string filePath, Type tokenType)
         {
-            List<Token> result = new List<Token>();
+            List<BaseToken> result = new List<BaseToken>();
 
             FileStream file = new FileStream(filePath, FileMode.Open);
             using (var stream = new StreamReader(file))
@@ -78,7 +78,7 @@ namespace AnalisadorLexico
             }
         }
 
-        private void GetIdentifiersAndConstants(string line, List<string> tokens, List<Token> result, int lineNumber)
+        private void GetIdentifiersAndConstants(string line, List<string> tokens, List<BaseToken> result, int lineNumber)
         {
             var splitedLine = line.Split(" ").ToList();
             var orderedTokens = tokens.OrderByDescending(t => t.Length);
@@ -111,7 +111,7 @@ namespace AnalisadorLexico
             }
         }
 
-        private void AddToken(List<Token> result, int lineNumber, string word)
+        private void AddToken(List<BaseToken> result, int lineNumber, string word)
         {
             this.AddToken(result, lineNumber, word, this.GetTokenType(word));
         }
@@ -122,10 +122,10 @@ namespace AnalisadorLexico
             result.Add(foundedToken);
         }
 
-        public List<Token> AnalizeV2(string filePath, Type tokenType)
+        public List<BaseToken> AnalizeV2(string filePath, Type tokenType)
         {
             int tokenMaxSize = 8;
-            List<Token> result = new List<Token>();
+            List<BaseToken> result = new List<BaseToken>();
             for (int tokenSize = tokenMaxSize; tokenSize >= 1; tokenSize--)
             {
                 int lineNumber = 1;
@@ -152,7 +152,7 @@ namespace AnalisadorLexico
 
                             if (allTokensOfSize.Contains(currentChar))
                             {
-                                var foundedToken = new Token() { Lexema = currentChar, Linha = lineNumber };
+                                var foundedToken = new BaseToken() { Lexema = currentChar, Linha = lineNumber };
                                 word = string.Empty;
                                 result.Add(foundedToken);
                             }

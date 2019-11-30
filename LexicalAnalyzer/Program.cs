@@ -24,7 +24,7 @@ namespace AnalisadorLexico
             RecursivePredictiveParser parser = new RecursivePredictiveParser();
 
             // Get Tokens
-            List<Token> tokenList = parser.LexicalAnalyzer.Analize(filePath, typeof(TokenTypeMiniJava));
+            List<BaseToken> tokenList = parser.LexicalAnalyzer.Analize(filePath, typeof(TokenTypeMiniJava));
             
             // Populate Symbol Table
             foreach (var token in tokenList.Where(t => 

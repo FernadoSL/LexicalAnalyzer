@@ -5,11 +5,11 @@ namespace LexicalAnalyzer.Entities
 {
     public class SymbolTable
     {
-        public Dictionary<string, Token> TokenTable {get;set;}
+        public Dictionary<string, BaseToken> TokenTable {get;set;}
 
         public SymbolTable()
         {
-            this.TokenTable = new Dictionary<string, Token>();
+            this.TokenTable = new Dictionary<string, BaseToken>();
         }
 
         public void SetAttribute(string key, string attribute, string valor)

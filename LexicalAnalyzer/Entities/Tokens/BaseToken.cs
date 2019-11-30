@@ -2,7 +2,7 @@
 
 namespace AnalisadorLexico
 {
-    public class Token
+    public class BaseToken
     {
         public TokenTypeMiniJava Tipo { get; set; }
 

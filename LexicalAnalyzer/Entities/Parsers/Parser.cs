@@ -8,6 +8,6 @@ namespace LexicalAnalyzer.Entities
 
         public Lexical LexicalAnalyzer { get; set; }
 
-        public Token Token { get; set; }
+        public BaseToken Token { get; set; }
     }
 }
