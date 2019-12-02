@@ -1,5 +1,6 @@
 ﻿using AnalisadorLexico.TiposToken;
 using LexicalAnalyzer.Entities;
+using LexicalAnalyzer.Entities.CodeGenerator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,6 +56,9 @@ namespace AnalisadorLexico
                     $"---"
                 );
             }
+
+            var codeGenerator = new CCodeGenerator();
+            Console.WriteLine(codeGenerator.CreateHelloWorld());
 
             Console.ReadKey();
             //C:\Users\Gavb-Fernando\Documents\repos\LexicalAnalyzer\miniJavaFactorial.mjar
