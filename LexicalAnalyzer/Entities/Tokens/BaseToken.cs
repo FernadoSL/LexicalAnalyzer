@@ -4,7 +4,7 @@ namespace AnalisadorLexico
 {
     public class BaseToken
     {
-        public TokenTypeMiniJava Tipo { get; set; }
+        public TokenTypeMiniJava TokenType { get; set; }
 
         public string Lexema { get; set; }
 
@@ -16,6 +16,18 @@ namespace AnalisadorLexico
 
         public string Scope { get; set; }
 
-        public string DataType { get; set; }
+        public string Type { get; set; }
+
+        public bool IsMain { get; set; }
+
+        public  bool IsVariable 
+        { 
+            get
+            {
+                return !this.IsMethod && !string.IsNullOrEmpty(this.Type);
+            }
+        }
+
+        public bool IsMethod { get; set; }
     }
 }

@@ -16,8 +16,8 @@ namespace AnalisadorLexico.TiposToken
         [Description("void")]
         SVOID,
 
-        [Description("main")]
-        SMAIN,
+        //[Description("main")]
+        //SMAIN,
 
         [Description("{")]
         SABRE_CHAVES,
@@ -55,8 +55,8 @@ namespace AnalisadorLexico.TiposToken
         [Description("while")]
         SWHILE,
 
-        [Description("System.out.println")]
-        SSYSTEM_OUT_PRINTLN,
+        //[Description("System.out.println")]
+        //SSYSTEM_OUT_PRINTLN,
 
         [Description("=")]
         SATRIBUICAO,

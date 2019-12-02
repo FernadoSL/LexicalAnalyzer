@@ -19,13 +19,14 @@ namespace AnalisadorLexico
             this.IdentifiersCounter = 1;
         }
 
-        public List<Token> Analize(string filePath, Type tokenType)
+        public List<BaseToken> Analize(string filePath, Type tokenType)
         {
             List<BaseToken> result = new List<BaseToken>();
 
             FileStream file = new FileStream(filePath, FileMode.Open);
             using (var stream = new StreamReader(file))
             {
+                string actualScope = string.Empty;
                 string line = "";
                 int lineNumber = 1;
 
@@ -34,9 +35,8 @@ namespace AnalisadorLexico
 
                 while ((line = stream.ReadLine()) != null)
                 {
-                    this.GetIdentifiersAndConstants(line, tokens, result, lineNumber);
-
-                    // C:\Users\alu2015110289\Documents\LexicalAnalyzer\miniJavaFactorial.mjar
+                    actualScope = this.GetScope(actualScope, line);
+                    this.GetIdentifiersAndConstants(line, tokens, result, lineNumber, actualScope);
                     
                     char[] lineCharArray = line.ToArray();
                     string word = string.Empty;
@@ -78,7 +78,17 @@ namespace AnalisadorLexico
             }
         }
 
-        private void GetIdentifiersAndConstants(string line, List<string> tokens, List<BaseToken> result, int lineNumber)
+        private string GetScope(string actualScope, string line)
+        {
+            if (line.Contains(this.GetTokenString(TokenTypeMiniJava.SCLASS)))
+            {
+                actualScope = line.Split(" ")[1];
+            }
+
+            return actualScope;
+        }
+
+        private void GetIdentifiersAndConstants(string line, List<string> tokens, List<BaseToken> result, int lineNumber, string scope)
         {
             var splitedLine = line.Split(" ").ToList();
             var orderedTokens = tokens.OrderByDescending(t => t.Length);
@@ -96,18 +106,26 @@ namespace AnalisadorLexico
                     this.CurrentScope = splitedLine.FirstOrDefault();
                 }
 
-                if (line.Contains(this.GetTokenString(TokenTypeMiniJava.SINT)))
-                {
-
-                }
-
                 bool isNumeric = int.TryParse(token, out int x);
                 if (isNumeric)
-                    AddToken(result, lineNumber, token, TokenTypeMiniJava.SCONSTANT);
+                    AddToken(result, lineNumber, token, TokenTypeMiniJava.SCONSTANT, this.CurrentScope);
                 else
-                    AddToken(result, lineNumber, token, TokenTypeMiniJava.SIDENTIFIER, this.IdentifiersCounter);
+                {
+                    string type = string.Empty;
+                    var identifierList = line.Replace("(", " ").Replace(")", " ").Replace("{", " ").Replace("}", " ").Replace(";", " ").Split(" ").ToList();
+                    int preIndexIdentifier = identifierList.IndexOf(token) - 1;
 
-                this.IdentifiersCounter++;
+                    if (preIndexIdentifier >= 0)
+                        type = identifierList.ToArray()[preIndexIdentifier];
+
+                    var addedToken = AddToken(result, lineNumber, token, TokenTypeMiniJava.SIDENTIFIER, this.CurrentScope, type);
+
+                    addedToken.IsMain = token.Equals("main");
+                    addedToken.IsMethod = addedToken.IsMain || (preIndexIdentifier - 1 >= 0 && identifierList.ToArray()[preIndexIdentifier - 1].Equals(this.GetTokenString(TokenTypeMiniJava.SPUBLIC)));
+
+                    if (addedToken.IsMethod)
+                        this.CurrentScope = addedToken.Lexema;
+                }
             }
         }
 
@@ -116,10 +134,12 @@ namespace AnalisadorLexico
             this.AddToken(result, lineNumber, word, this.GetTokenType(word));
         }
 
-        private void AddToken(List<Token> result, int lineNumber, string word, TokenTypeMiniJava tokenType, int identifierCounter = 0)
+        private BaseToken AddToken(List<BaseToken> result, int lineNumber, string word, TokenTypeMiniJava tokenType, string scope = "", string type = "")
         {
-            var foundedToken = new Token() { Lexema = word, Linha = lineNumber, Tipo = tokenType, Id = identifierCounter, Scope = this.CurrentScope };
+            var foundedToken = new BaseToken() { Lexema = word, Linha = lineNumber, TokenType = tokenType, Scope = scope, Type = type };
             result.Add(foundedToken);
+
+            return foundedToken;
         }
 
         public List<BaseToken> AnalizeV2(string filePath, Type tokenType)

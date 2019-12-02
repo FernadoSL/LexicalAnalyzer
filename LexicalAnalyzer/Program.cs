@@ -28,7 +28,7 @@ namespace AnalisadorLexico
             
             // Populate Symbol Table
             foreach (var token in tokenList.Where(t => 
-                t.Tipo == TokenTypeMiniJava.SIDENTIFIER || t.Tipo == TokenTypeMiniJava.SCONSTANT))
+                t.TokenType == TokenTypeMiniJava.SIDENTIFIER || t.TokenType == TokenTypeMiniJava.SCONSTANT))
             {
                 parser.SymbolTable.TokenTable.TryAdd(token.Lexema, token);
             }
@@ -37,16 +37,27 @@ namespace AnalisadorLexico
             Console.WriteLine("Número de tokens: " + tokenList.Count);
             foreach (var token in tokenList.OrderBy(t => t.Linha))
             {
-                Console.WriteLine($"Lexema: {token.Lexema} \nLinha: {token.Linha} \nTipoToken: {token.Tipo} \n---");
+                Console.WriteLine($"Lexema: {token.Lexema} \nLinha: {token.Linha} \nTipoToken: {token.TokenType} \n---");
             }
 
-            Console.WriteLine("Tabela de Símbolos: ");
-            foreach (var simbolo in parser.SymbolTable.TokenTable)
+            Console.WriteLine("Tabela de Símbolos: \n---");
+            foreach (var simbolo in 
+                parser.SymbolTable.TokenTable
+                .Where(t => t.Value.IsMain || t.Value.IsMethod || t.Value.IsVariable)
+                .OrderBy(t => t.Value.IsMethod))
             {
-                Console.WriteLine(simbolo.Key + " " + simbolo.Value.Scope);
+                Console.WriteLine(
+                    $"Lexema: {simbolo.Key } \n" +
+                    $"Escopo: {simbolo.Value.Scope} \n" +
+                    $"Tipo: {simbolo.Value.Type} \n" +
+                    $"É Método: {simbolo.Value.IsMethod} \n" +
+                    $"É Variável: {simbolo.Value.IsVariable} \n" +
+                    $"---"
+                );
             }
 
             Console.ReadKey();
+            //C:\Users\Gavb-Fernando\Documents\repos\LexicalAnalyzer\miniJavaFactorial.mjar
         }
     }
 }
