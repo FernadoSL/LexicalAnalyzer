@@ -31,7 +31,7 @@ namespace AnalisadorLexico
             foreach (var token in tokenList.Where(t => 
                 t.TokenType == TokenTypeMiniJava.SIDENTIFIER || t.TokenType == TokenTypeMiniJava.SCONSTANT))
             {
-                parser.SymbolTable.TokenTable.TryAdd(token.Lexema, token);
+                parser.SymbolTable.TokenTable.TryAdd(token.Lexema + "-" + token.Scope, token);
             }
 
             // Print Results
@@ -44,11 +44,12 @@ namespace AnalisadorLexico
             Console.WriteLine("Tabela de Símbolos: \n---");
             foreach (var simbolo in 
                 parser.SymbolTable.TokenTable
-                .Where(t => t.Value.IsMain || t.Value.IsMethod || t.Value.IsVariable)
+                //.Where(t => t.Value.IsMain || t.Value.IsMethod || t.Value.IsVariable)
                 .OrderBy(t => t.Value.IsMethod))
             {
                 Console.WriteLine(
                     $"Lexema: {simbolo.Key } \n" +
+                    $"Linha: {simbolo.Value.Linha} \n" + 
                     $"Escopo: {simbolo.Value.Scope} \n" +
                     $"Tipo: {simbolo.Value.Type} \n" +
                     $"É Método: {simbolo.Value.IsMethod} \n" +
@@ -58,10 +59,12 @@ namespace AnalisadorLexico
             }
 
             var codeGenerator = new CCodeGenerator();
-            Console.WriteLine(codeGenerator.CreateHelloWorld());
+            //Console.WriteLine(codeGenerator.CreateHelloWorld());
+            Console.WriteLine(codeGenerator.CreateProgramFromSymbolTable(parser.SymbolTable));
 
             Console.ReadKey();
             //C:\Users\Gavb-Fernando\Documents\repos\LexicalAnalyzer\miniJavaFactorial.mjar
+            //C:\Users\FERNANDO\Documents\PortiRepositório\Ciências Da Computação\Compiladores\LexicalAnalyzer\miniJavaFactorial.mjar
         }
     }
 }

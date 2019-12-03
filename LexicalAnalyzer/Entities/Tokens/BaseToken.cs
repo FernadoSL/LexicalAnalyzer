@@ -24,10 +24,12 @@ namespace AnalisadorLexico
         { 
             get
             {
-                return !this.IsMethod && !string.IsNullOrEmpty(this.Type);
+                return !this.IsMethod && !string.IsNullOrEmpty(this.Type) && !this.Type.Equals("new");
             }
         }
 
         public bool IsMethod { get; set; }
+
+        public string PrintParameter { get; set; }
     }
 }

@@ -120,12 +120,25 @@ namespace AnalisadorLexico
 
                     var addedToken = AddToken(result, lineNumber, token, TokenTypeMiniJava.SIDENTIFIER, this.CurrentScope, type);
 
+                    this.VerifySysOutIdentifier(line, identifierList, addedToken);
+
                     addedToken.IsMain = token.Equals("main");
                     addedToken.IsMethod = addedToken.IsMain || (preIndexIdentifier - 1 >= 0 && identifierList.ToArray()[preIndexIdentifier - 1].Equals(this.GetTokenString(TokenTypeMiniJava.SPUBLIC)));
 
                     if (addedToken.IsMethod)
                         this.CurrentScope = addedToken.Lexema;
                 }
+            }
+        }
+
+        private void VerifySysOutIdentifier(string line, List<string> identifierList, BaseToken addedToken)
+        {
+            string identiFierConsoleOut = "System.out.println";
+            if (identifierList.Contains(identiFierConsoleOut))
+            {
+                string printParameter = line.Replace(identiFierConsoleOut + "(", "").Replace(");", "").Trim();
+
+                addedToken.PrintParameter = printParameter;
             }
         }
 
