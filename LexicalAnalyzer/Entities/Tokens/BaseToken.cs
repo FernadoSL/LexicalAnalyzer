@@ -31,5 +31,11 @@ namespace AnalisadorLexico
         public bool IsMethod { get; set; }
 
         public string PrintParameter { get; set; }
+
+        public bool IsAttribution { get; set; }
+
+        public string AttributionVariable { get; set; }
+
+        public string AttributionValue { get; set; }
     }
 }

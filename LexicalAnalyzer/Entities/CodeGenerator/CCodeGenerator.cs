@@ -10,7 +10,7 @@ namespace LexicalAnalyzer.Entities.CodeGenerator
             string main = this.CreateMain();
             string print = this.CreatePrint("Hello World");
 
-            string result = InsertIntoMain(main, print);
+            string result = InsertIntoFunction(main, print);
             string resultFormated = this.FormatNewLine(result);
 
             return this.RemoveReservedWords(resultFormated);
@@ -47,13 +47,19 @@ namespace LexicalAnalyzer.Entities.CodeGenerator
                 if (tokenInFunction.Value.IsVariable)
                 {
                     string variableInFunction = this.CreateVariable(tokenInFunction.Value.Type, tokenInFunction.Value.Lexema);
-                    function = this.InsertIntoMain(function, variableInFunction);
+                    function = this.InsertIntoFunction(function, variableInFunction);
                 }
 
                 if (tokenInFunction.Value.Lexema.Equals("ln"))
                 {
                     string printInFunction = this.CreatePrint(tokenInFunction.Value.PrintParameter);
-                    function = this.InsertIntoMain(function, printInFunction);
+                    function = this.InsertIntoFunction(function, printInFunction);
+                }
+
+                if (tokenInFunction.Value.IsAttribution)
+                {
+                    string attributionStatement = this.CreateAttribution(tokenInFunction.Value.AttributionVariable, tokenInFunction.Value.AttributionValue);
+                    function = this.InsertIntoFunction(function, attributionStatement);
                 }
             }
 
@@ -96,7 +102,7 @@ namespace LexicalAnalyzer.Entities.CodeGenerator
             return string.Format("{0} {1}()", returnType, functionName) + " { \n" + " return " + returnValue + ";" + "}";
         }
 
-        public string InsertIntoMain(string mainFunction, string newCode)
+        public string InsertIntoFunction(string mainFunction, string newCode)
         {
             List<string> mainSplited = mainFunction.Split("{").ToList();
             mainSplited.Insert(1, " { ");

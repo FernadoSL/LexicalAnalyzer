@@ -26,12 +26,22 @@ namespace AnalisadorLexico
 
             // Get Tokens
             List<BaseToken> tokenList = parser.LexicalAnalyzer.Analize(filePath, typeof(TokenTypeMiniJava));
-            
+
             // Populate Symbol Table
-            foreach (var token in tokenList.Where(t => 
-                t.TokenType == TokenTypeMiniJava.SIDENTIFIER || t.TokenType == TokenTypeMiniJava.SCONSTANT))
+            int attributionCount = 1;
+            foreach (var token in 
+                tokenList.Where(t => t.TokenType == TokenTypeMiniJava.SIDENTIFIER || 
+                                     t.TokenType == TokenTypeMiniJava.SCONSTANT ||
+                                     t.IsAttribution))
             {
-                parser.SymbolTable.TokenTable.TryAdd(token.Lexema + "-" + token.Scope, token);
+                string key = token.Lexema + "-" + token.Scope;
+                if (token.IsAttribution)
+                {
+                    key = key + "-" + attributionCount;
+                    attributionCount++;
+                }
+
+                bool success = parser.SymbolTable.TokenTable.TryAdd(key, token);
             }
 
             // Print Results
@@ -48,7 +58,7 @@ namespace AnalisadorLexico
                 .OrderBy(t => t.Value.IsMethod))
             {
                 Console.WriteLine(
-                    $"Lexema: {simbolo.Key } \n" +
+                    $"Lexema: {simbolo.Value.Lexema } \n" +
                     $"Linha: {simbolo.Value.Linha} \n" + 
                     $"Escopo: {simbolo.Value.Scope} \n" +
                     $"Tipo: {simbolo.Value.Type} \n" +

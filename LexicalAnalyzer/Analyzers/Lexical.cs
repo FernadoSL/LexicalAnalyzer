@@ -37,7 +37,8 @@ namespace AnalisadorLexico
                 {
                     actualScope = this.GetScope(actualScope, line);
                     this.GetIdentifiersAndConstants(line, tokens, result, lineNumber, actualScope);
-                    
+                    this.GetAttributions(result, this.CurrentScope, line, lineNumber);
+
                     char[] lineCharArray = line.ToArray();
                     string word = string.Empty;
                     for (int i = 0; i < lineCharArray.Length; i++)
@@ -75,6 +76,26 @@ namespace AnalisadorLexico
                 }
 
                 return result;
+            }
+        }
+
+        private void GetAttributions(List<BaseToken> result, string actualScope, string line, int lineNumber)
+        {
+            string stringAttribution = GetTokenString(TokenTypeMiniJava.SATRIBUICAO);
+
+            if (line.Contains(stringAttribution))
+            {
+                var attributionLine = line.Split(this.GetTokenString(TokenTypeMiniJava.SPONTO_VIRGULA)).FirstOrDefault();
+                if (!string.IsNullOrEmpty(attributionLine))
+                {
+                    string variable = attributionLine.Split(stringAttribution)[0].Trim();
+                    string value = attributionLine.Split(stringAttribution)[1].Trim();
+
+                    var attributionToken = this.AddToken(result, lineNumber, "", TokenTypeMiniJava.SATRIBUICAO, actualScope);
+                    attributionToken.AttributionVariable = variable;
+                    attributionToken.AttributionValue = value;
+                    attributionToken.IsAttribution = true;
+                }
             }
         }
 
