@@ -124,7 +124,8 @@ namespace LexicalAnalyzer.Entities.CodeGenerator
         {
             List<string> reservedWords = new List<string>()
             {
-                "new Fac()."
+                "new Fac().",
+                "this."
             };
 
             foreach (var reservedWord in reservedWords)

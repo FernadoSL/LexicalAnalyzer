@@ -29,6 +29,7 @@ namespace AnalisadorLexico
 
             // Populate Symbol Table
             int attributionCount = 1;
+            int printCount = 1;
             foreach (var token in 
                 tokenList.Where(t => t.TokenType == TokenTypeMiniJava.SIDENTIFIER || 
                                      t.TokenType == TokenTypeMiniJava.SCONSTANT ||
@@ -39,6 +40,11 @@ namespace AnalisadorLexico
                 {
                     key = key + "-" + attributionCount;
                     attributionCount++;
+                }
+                else if (token.Lexema.Equals("ln"))
+                {
+                    key = key + "-" + printCount;
+                    printCount++;
                 }
 
                 bool success = parser.SymbolTable.TokenTable.TryAdd(key, token);
